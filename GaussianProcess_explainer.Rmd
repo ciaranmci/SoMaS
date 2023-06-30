@@ -9,11 +9,11 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, fig.align = "center")
 ```
 
 #### Requisites
-```{r Requisites, warning = FALSE, message = FALSE}
+```{r Requisites}
 # Load packages.
 library(tidyverse)
 library(RobustGaSP)
@@ -49,7 +49,7 @@ So, what is the motivation behind Gaussian processes?
 Once upon a time, a South African by the name of Danie G. Krige was trying to estimate the distribution of gold deposits across an entire region when all he had to work with were observations of gold from a disparate sample of boreholes. His work – summarised in [his 1951 publication](https://journals.co.za/doi/epdf/10.10520/AJA0038223X_4792)  entitled “A statistical approach to some basic mine valuation problems on the Witwatersrand” – was read by the French mathematician Georges Matheron who developed the ideas and created the field of geostatistics. Matheron developed a method that provides the best-linear-unbiased-prediction of interpolated values, which he called Kriging after Danie G. Krige and his inspiring work.
 <br/><br/>
 
-```{r, figures-side, fig.show="hold", out.width="20%", fig.align = "center", fig.cap="(Left) Danie Krige, namesake of 'Kriging'. (Right) Georges Matheron, who developed Danie Krige's work."}
+```{r figures-side, fig.show="hold", out.width="20%", fig.cap="(Left) Danie Krige, namesake of 'Kriging'. (Right) Georges Matheron, who developed Danie Krige's work."}
 par(mar = c(4, 4, .1, .1))
 knitr::include_graphics("images/danie_krige.jpeg")
 knitr::include_graphics("images/georges_matheron.jpg")
@@ -74,11 +74,11 @@ knitr::include_graphics("images/bobrossmountain.jpg")
 <br/><br/>
 
 ### Mountain plotter
-Let’s say you asked me to paint a mountain landscape. I’m feeling entrepreneurial and decide to automate the process because I think more people will want this kind of painting in the future. Obviously, my automated mountain painter – which I’ve called mountain plotter – will need some variability so that I don’t counterfeit my marvellous work!
+Let’s say you asked me to paint a mountain landscape. I’m feeling entrepreneurial and decide to automate the process because I think more people will want this kind of painting in the future. Obviously, my automated mountain painter – which I’ve called mountain plotter – will need some variability so that I don’t counterfeit my marvelous work!
 
 My first attempt might be to use a typical univariate Gaussian distribution. These are characterised by a mean and a variance. The mean will specify the location of the peak, horizontally, and the variance will inform the sloppiness of the sides. The height at any given point on the mountain is given by the ‘density’ – i.e. the proportion of observations we would expect at the given horizontal location; highest in the middle at the mean location, lower as move away from the mean location.
 
-```{r One univariate, out.width="50%", fig.align = "center", fig.height = 3}
+```{r One univariate, out.width="50%", fig.height = 3}
 myMean <- 5
 df_univariate <-
   data.frame(
@@ -98,7 +98,7 @@ df_univariate <-
 <br/><br/>
 
 My first attempt looks pretty good but there isn’t much variability between paintings when I run the script multiple times:
-```{r Three univariates, fig.align = "center", fig.height = 2}
+```{r Three univariates, fig.height = 2}
 # Specifiy the mean
 myMean <- 5
 # Create the plot data.
@@ -131,7 +131,7 @@ for (iter in 1:3)
 <br/><br/>
 
 To add more variety, I could add more peaks. For this, I might use mixture distributions, which are nothing more complicated than drawing multiple peaks by specifying multiple means for multiple univariate Gaussian distributions. It looks something like this:
-```{r Three mixtures of three, fig.align = "center", fig.height = 2}
+```{r Three mixtures of three, fig.height = 2}
 # Specify the vector of means.
 v_means <- c(5, 15, 25)
 # Create the plot data.
@@ -176,7 +176,7 @@ for (i_trial in 1:3)
 
 
 With mixture distributions, we are independently generating samples from each of the univariate distributions and overlaying the results on the same plot. In the figure above, it’s almost like we are just throwing a blanket over the top of the three univariate distributions and it is sagging between the peaks. If we pick a point at some height on our mountain range (the black line), we can see that it is just the sum of the overlapping, underlying univariate distributions.
-```{r Layering the mixture, fig.align = "center", fig.height = 3}
+```{r Layering the mixture, fig.height = 3}
 
 ```
 <br/><br/>
@@ -184,7 +184,7 @@ With mixture distributions, we are independently generating samples from each of
 
 Unfortunately, there is still not much variation between peaks, and this mountain range doesn’t look realistic; especially not one with peaks so close together. Instead, we’d expect some higher ridges between the peaks. I mean, look at Bob Ross’ masterpiece.
 
-```{r Bobs mountains, out.width="50%", fig.align = "center"}
+```{r Bobs mountains, out.width="50%"}
 knitr::include_graphics("images/bobrossmountainrange.jpg")
 ```
 <br/><br/>
@@ -199,14 +199,14 @@ We need to think differently. We need to think of a method that allows for the f
 
 Hmm, What method might work?
 
-```{r Thinking Sherlock, fig.align = "center"}
+```{r Thinking Sherlock}
 knitr::include_graphics("https://media.giphy.com/media/fv8KclrYGp5dK/giphy.gif")
 ```
 <br/><br/>
 <br/><br/>
 
 Thankfully, Gaussian processes / compilations can help us do just that, and produce a mountain range like what I show below. Specifically, I make use of a Gaussian process emulator, which you can learn more about in [my other explainer]():
-```{r GP mountain range, out.width="50%", fig.align = "center", results='hide', warning = FALSE}
+```{r GP mountain range, out.width="50%", results='hide'}
 # Specify the data.
 GP_data <-
   df_mixture  %>%
@@ -268,7 +268,7 @@ That’s right: each point in our one-dimensional example has its own distributi
 ### Just add more
 Let’s start really small and plot the distributions of three categorical variables. The plot below shows the distributions as familiar box plots, but also as (what I call) barcode plots.
 
-```{r Three barcode plots, out.width="50%", fig.align = "center", results='hide', warning = FALSE}
+```{r Three barcode plots, out.width="50%", results='hide'}
 # Specify the heights of the barcode plots.
 heights <- c(5, 20, 5)
 # Create the plot data.
@@ -302,7 +302,7 @@ for (iter in 1:3)
 We are used to seeing these kinds of visualisations. They tell us that there are multiple values (shown vertically) associated with multiple categories (shown horizontally).
 <br/><br/>
 Now, let’s increase the number of categories. I'll drop the boxplots and only show the barcode plots.
-```{r Ten barcode plots, out.width="50%", fig.align = "center", results='hide', warning = FALSE}
+```{r Ten barcode plots, out.width="50%"}
 # Specify the heights of the barcode plots.
 heights <- c(5, 7, 10, 14, 20, 18, 14, 10, 7, 5)
 # Create the plot data.
@@ -333,7 +333,7 @@ for (iter in 1:10)
 Again, no problems here; it’s all very familiar. The variable being represented by the categories on the horizontal axis appears to have a lot of categories and each category has a lot of vertical values.
 <br/><br/>
 Now, let’s push this to the ridiculous end of the spectrum. Fancy 80 categories?
-```{r Eighty barcode plots, out.width="50%", fig.align = "center", results='hide', warning = FALSE}
+```{r Eighty barcode plots, out.width="50%"}
 # Set number of categories.
 cats <- 80
 # Specify the heights of the barcode plots.
@@ -373,7 +373,7 @@ It's all blurring together - like a blurry view of a mountain.
 At this point, you might start to think that the variable on the horizontal axis has so many values that it might be wise to model it as a continuous variable. Voila! You now have a way to conceptualise Gaussian processes / compilations: infinitely many distributional plots. In fact, I created the previous plot by sampling density values from our univariate Gaussian distribution, using each density value (i.e. height) as the mean for a Gaussian distribution, then plotting them with barcode plots.
 <br/><br/>
 Also, looking at the plots below from left to right, you can see how I generated the Gaussian-process mountain range from earlier:
-```{r Making of GP mountain range, fig.align = "center", results='hide', warning = FALSE}
+```{r Making of GP mountain range, out.width="100%"}
 ## Sample some height data.
 df_sample_mixture_blanket <-
   data_p_mixture_blanket %>%
@@ -445,7 +445,7 @@ As I mentioned earlier, if you want to learn more about Gaussian processs emulat
 ## Covariance functions
 In the previous visualisation, I showed the four steps I took to produce a smooth mountain range (plot 4; right-most). I chose the mean predicted values from the distributions, which produced something quite smooth. But there are actually infinitely-many curves / functions / mountain ranges that would satisfy the distributions of heights at each point on the mountain range. For example, I might not care at all about smoothness and opt to model the mountain range as a discontinuous function of randomly sampled heights at each point:
 
-```{r Jaggedy sampling, out.width="50%", fig.align = "center", results='hide', warning = FALSE}
+```{r Jaggedy sampling, out.width="50%"}
 # Randomly sample from each random variable.
 df_jaggedy <-
   df_blurry_mixture_blanket %>%
@@ -464,20 +464,20 @@ df_jaggedy <-
 ```
 
 Alternatively, I might prefer to take a bigger-picture approach and choose a different covariance function to achieve the same kind of jaggediness:
-```{r Jaggedy covariance function, out.width="50%", fig.align = "center", results='hide', warning = FALSE}
+```{r Jaggedy covariance function, out.width="50%"}
 # Fit a new GPE using parameters to make things really jaggedy, like Brownian 
 # motion. Unforunately, RobustGaSP and dgpsi both have limited kernels. The
 # DiceKriging package might provide the option to specify my own kernel: https://www.rdocumentation.org/packages/DiceKriging/versions/1.6.0/topics/km
 
 ```
 
-not care at all about smoothness and opt to model the mountain range as a discontinuous function of randomly sampled heights at each point:
 <br/><br/>
 <br/><br/>
 
 Comparing this jaggedy plot to the previous one, you might be wondering how the line produced by the mean of predicted values is so much smoother than the line produced by randomly sampling from each variable along the horizontal. The answer is that I *chose* the _covariance function_ that told my Gaussian process model how the random variables relate. My choice of covariance function was independent of the true relationships between the random variables that fed my model. This meant I could change the form of the mountain range to whatever I want but choosing a different covariance function. The choice of covariance function is strongly influential on the possible set of functions that will be returned.
 <br/><br/>
 
+### But what is a covariance function?
 So, I said the relationship between the component random variables is described by the covariance function, but what is a covariance function? While a covariance matrix summarises how possible observations from two random variables vary around their respective means, a covariance function summarises how the possible means of random variables vary around the multivariate mean.
 <br/><br/>
 
@@ -496,7 +496,7 @@ Essentially, kernel tricks like the covariance functions are an additional model
 
 ## Final thoughts and other resources
 Gaussian processes require that the multivariate Gaussian distribution arises for any linear predictor of component random variables that are Gaussian distributed. Linear predictors are handy mathematical objects but there is nothing inherently more correct or representative about them than other ways of combining random variables. Below is snippet of a slide I show my students to reveal what assumptions we make when we specify some linear-predictor models:
-```{r, out.width="50%", fig.align = "center", fig.cap="A delightful Bob Ross with one of his paintings."}
+```{r, out.width="50%"}
 knitr::include_graphics("images/why_limit_to_linear_predictors.jpg")
 ```
 <br/><br/>
