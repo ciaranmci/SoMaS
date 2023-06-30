@@ -545,7 +545,7 @@ gridExtra::grid.arrange(p_mixture_blanket + plotformatting,
                         ncol = 4)
 ```
 
-<img src="GaussianProcess_explainer_files/figure-gfm/Making of GP mountain range-1.png" style="display: block; margin: auto;" />
+<img src="GaussianProcess_explainer_files/figure-gfm/Making of GP mountain range-1.png" width="100%" style="display: block; margin: auto;" />
 <br/><br/> <br/><br/>
 
 In the four-plot visualisation above, you can see that I:
@@ -609,8 +609,6 @@ jaggediness:
 # DiceKriging package might provide the option to specify my own kernel: https://www.rdocumentation.org/packages/DiceKriging/versions/1.6.0/topics/km
 ```
 
-not care at all about smoothness and opt to model the mountain range as
-a discontinuous function of randomly sampled heights at each point:
 <br/><br/> <br/><br/>
 
 Comparing this jaggedy plot to the previous one, you might be wondering
@@ -624,6 +622,8 @@ I could change the form of the mountain range to whatever I want but
 choosing a different covariance function. The choice of covariance
 function is strongly influential on the possible set of functions that
 will be returned. <br/><br/>
+
+### But what is a covariance function?
 
 So, I said the relationship between the component random variables is
 described by the covariance function, but what is a covariance function?
