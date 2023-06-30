@@ -4,8 +4,8 @@ author: "Ciarán McInerney"
 date: "2023-06-23"
 output:
   #html_document:
-  rmarkdown::github_document:
-    code_folding: hide
+  github_document:
+    #code_folding: hide
 ---
 
 ```{r setup, include=FALSE}
