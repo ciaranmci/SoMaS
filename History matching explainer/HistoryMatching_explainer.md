@@ -99,15 +99,17 @@ where
 
 $$
 I_{i}(parameter\ value_{j}) = \frac{ |\ observation_{i} - E[\ prediction_{i}( parameter\ value_{j})\ ]\ | } {\sqrt{ Var[\ observation_{i} - E[\ prediction_{i}(parameter\ value_{j})\ ]\ ] }}
-$$ and where $i$ refers to runs of the model, and $j$ refers to inputs
-for particular parameter values. You use the implausability measure to
-rank parameter values then trim off the worst. <br/><br/> Any choice of
-rule comes with trade-offs. The implausibility measure, for example, can
-be compared across different predictive models even with different
-outputs because it is a unitless, scaled score. But, if the process of
-scoring, ranking, and triming always trims the most-extreme scores, then
-repeated application (called “refocussing”) can result in a situation
-like [Zeno’s dichotomy
+$$
+
+and where $i$ refers to runs of the model, and $j$ refers to inputs for
+particular parameter values. You use the implausability measure to rank
+parameter values then trim off the worst. <br/><br/> Any choice of rule
+comes with trade-offs. The implausibility measure, for example, can be
+compared across different predictive models even with different outputs
+because it is a unitless, scaled score. But, if the process of scoring,
+ranking, and triming always trims the most-extreme scores, then repeated
+application (called “refocussing”) can result in a situation like
+[Zeno’s dichotomy
 paradox](https://en.wikipedia.org/wiki/The_Indefatigable_Frog) and can
 result in the Not Ruled Out Yet space vanishig. To prevent this, some
 absolute, minimum size of the Not Ruled Out Yet space needs to be
@@ -631,6 +633,7 @@ knitr::include_graphics("https://media.giphy.com/media/Ymt6N7O93ixVVbmBNl/giphy.
 ```
 
 <img src="https://media.giphy.com/media/Ymt6N7O93ixVVbmBNl/giphy.gif" width="50%" style="display: block; margin: auto;" />
+
 I have to agree with her: in times when you can’t know the future with
 sufficient certainty, choose the least-worst option and reassess.
 <br/><br/> (*Side note: This is exactly the approach advocated for
@@ -708,17 +711,20 @@ inherently a bad thing, but not acknowledging it misleads)* <br/><br/>
 
 ### The dangers of extrapolation
 
-Another problem I have with history matching is that it infers what
-inputs are reasonable by assessing only a handful of observations.
-Making inferences is just part of life but it must be handled with care.
-For example, does history matching assume a linearity of output values’
+The models we fit usign history-matched points make “predictions” beyond
+the matched points, i.e. interpolation and extrapolation. Another
+problem I have with history matching is that it infers what inputs are
+reasonable by assessing only a handful of observations. Making
+inferences is just part of life but it must be handled with care. For
+example, does history matching assume a linearity of output values’
 effects to input values? By disregarding all input values beyond our Not
 Ruled Out Yet space, we don’t permit non-linear effects, reversal of
 effects, or pockets of sensible outputs after a gap of nonsensical ones.
 Let me try to give some illustrative examples:
 
 -   An over-the-top example is to match a straight-line linear
-    regression model to pre-1960 global surface temperature This
+    regression model to pre-1960 global surface temperature. This is
+    something like history matching on only these pre-1960 data. This
     underestimates today’s temperatures. This could be avoided by not
     limiting our matching observations to a small region. Latin
     Hypercube sampling and theoretically-informed ranges should be able
