@@ -3,9 +3,9 @@ title: "History Matching"
 author: "Ciarán McInerney"
 date: "2023-06-27"
 output:
-  #github_document:
-  html_document:
-    code_folding: hide
+  github_document:
+  #html_document:
+  #  code_folding: hide
 ---
 
 ```{r setup, include=FALSE}
@@ -63,6 +63,7 @@ where
 $$
 I_{i}(parameter\ value_{j}) = \frac{ |\ observation_{i} - E[\ prediction_{i}( parameter\ value_{j})\ ]\ | } {\sqrt{ Var[\ observation_{i} - E[\ prediction_{i}(parameter\ value_{j})\ ]\ ] }}
 $$
+
 and where $i$ refers to runs of the model, and $j$ refers to inputs for particular parameter values. You use the implausability measure to rank parameter values then trim off the worst.
 <br/><br/>
 Any choice of rule comes with trade-offs. The implausibility measure, for example, can be compared across different predictive models even with different outputs because it is a unitless, scaled score. But, if the process of scoring, ranking, and triming always trims the most-extreme scores, then repeated application (called "refocussing") can result in a situation like [Zeno’s dichotomy paradox](https://en.wikipedia.org/wiki/The_Indefatigable_Frog) and can result in the Not Ruled Out Yet space vanishig. To prevent this, some absolute, minimum size of the Not Ruled Out Yet space needs to be set...but couldn't we just have set an absolute, maximum accepted difference in the first place?
@@ -298,7 +299,6 @@ As expected, our green region of Not Ruled Out Yet input-output tuples shrinks a
 <br/><br/>
 <br/><br/>
 
-
 ### Matching only where we need to match.
 It might be the case that all you've been given some historical observations to use for matching, in which case you just have to hope that they cover the range of inputs and outputs that you are interested in. But given that you are trying to reduce uncertainty in your model's outputs, it'd be wise not to just randomly match input-output tuples for history matching. It would be better to intentionally match input-output tuples in areas of high output uncertainty in the hope of reducing the uncertainty in the model output. (You won't get rid of it all because there is natural variance in underlying phenomenon. If it fits perfectly, it's very likely wrong)
 <br/><br/>
@@ -433,9 +433,11 @@ The first step is to calculate the immediately-future state of your model, for a
 The second step is to actually observe the immediately-future. This is like your phone buzzing again as a second message arrives, but you are paying attention this time so you now know for sure that it is somewhere to the right of you. Congratulations, you have updated your understanding and limited the range of possible inputs toward your desired output. In other words, you have constrained the choice of directions in which you will travel to find your phone.
 <br/><br/>
 The fossil fuel industry seem to be rather keen on this approach - see [Rwechungura et al. 2011](https://sci-hub.wf/10.2118/142497-MS). I'm unsettled about the Gaussian assumption but, as Anna said in Frozen 2,:
+
 ```{r Next right thing, out.width = "50%", results = "unhide"}
 knitr::include_graphics("https://media.giphy.com/media/Ymt6N7O93ixVVbmBNl/giphy.gif")
 ```
+
 I have to agree with her: in times when you can't know the future with sufficient certainty, choose the least-worst option and reassess.
 <br/><br/>
 (_Side note: This is exactly the approach advocated for navigating complex adaptive systems, particular social ones. [Dave Snowden](https://thecynefin.co/team/dave-snowden/), coiner of the term "antropic complexity", [is particularly a fan](https://www.coachesrising.com/podcast/the-problem-with-developmental-models-with-dave-snowden/)._)
@@ -469,9 +471,9 @@ _(Side note: Focussing our analyses is permissible if we acknowledge that we are
 <br/><br/>
 
 ### The dangers of extrapolation
-Another problem I have with history matching is that it infers what inputs are reasonable by assessing only a handful of observations. Making inferences is just part of life but it must be handled with care. For example, does history matching assume a linearity of output values' effects to input values? By disregarding all input values beyond our Not Ruled Out Yet space, we don't permit non-linear effects, reversal of effects, or pockets of sensible outputs after a gap of nonsensical ones. Let me try to give some illustrative examples:
+The models we fit usign history-matched points make "predictions" beyond the matched points, i.e. interpolation and extrapolation. Another problem I have with history matching is that it infers what inputs are reasonable by assessing only a handful of observations. Making inferences is just part of life but it must be handled with care. For example, does history matching assume a linearity of output values' effects to input values? By disregarding all input values beyond our Not Ruled Out Yet space, we don't permit non-linear effects, reversal of effects, or pockets of sensible outputs after a gap of nonsensical ones. Let me try to give some illustrative examples:
 
-- An over-the-top example is to match a straight-line linear regression model to pre-1960 global surface temperature This underestimates today's temperatures. This could be avoided by not limiting our matching observations to a small region. Latin Hypercube sampling and theoretically-informed ranges should be able to account for this, in many cases. But what if all historical observations - and thus our understanding - manifest from the same local portion of a curve?
+- An over-the-top example is to match a straight-line linear regression model to pre-1960 global surface temperature. This is something like history matching on only these pre-1960 data. This underestimates today's temperatures. This could be avoided by not limiting our matching observations to a small region. Latin Hypercube sampling and theoretically-informed ranges should be able to account for this, in many cases. But what if all historical observations - and thus our understanding - manifest from the same local portion of a curve?
 
 ```{r Global temp extrapolation , fig.align = "center", out.width="50%"}
 # Prepare data
