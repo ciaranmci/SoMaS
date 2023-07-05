@@ -610,16 +610,18 @@ machines. <br /><br /></p>
 <h2>How?</h2>
 <p>To illustrate a Gaussian process emulator, I’ll use the two-input toy
 example from <a href="https://sci-hub.wf/10.1198/tech.2009.08019">Bastos
-and O’Hagan</a>. <br /><br /> <br /><br /> Each of <span class="math inline">\(n\)</span> iterations, <span class="math inline">\(i=(1, 2, \ldots , n)\)</span>, of the simulation
+and O’Hagan</a>. <br /><br /> Each of <span class="math inline">\(n\)</span> iterations, <span class="math inline">\(i=(1, 2, \ldots , n)\)</span>, of the simulation
 takes two real-numbered inputs, <span class="math inline">\(a\)</span>
 and <span class="math inline">\(b\)</span>, with range between 0 and 1
 inclusive, to produce an output, <span class="math inline">\(y\)</span>,
-according to the function <span class="math display">\[
+according to the function</p>
+<p><span class="math display">\[
 y = (1-e^{-\frac{1}{2b}})
 \left(\frac{2300a^3+1900a^2+2092a+60}{100a^3+500a^2+4a+20}\right)
-\]</span> I’ll fit a Gaussian process emulator on the inputs and outputs
-of 20 simulations; these 20 tuples will provide the ‘train’ dataset.
-I’ll assess my Gaussian process emulator on a separate set of inputs and
+\]</span></p>
+<p>I’ll fit a Gaussian process emulator on the inputs and outputs of 20
+simulations; these 20 tuples will provide the ‘train’ dataset. I’ll
+assess my Gaussian process emulator on a separate set of inputs and
 outputs from another 25 simulations; these 25 tuples will provide the
 ‘test’ dataset. The values for inputs will be selected by latin
 hypercube sampling. <br /><br /> <br /><br /> Let’s crunch those numbers and
@@ -705,10 +707,12 @@ knitr::kable(head(df_GPE_train))</code></pre>
 covariance / correlation function (a.k.a. a kernel) to define how any
 two given values of an input - i.e. either <span class="math inline">\(a\)</span> and <span class="math inline">\(a^{\prime}\)</span> or <span class="math inline">\(b\)</span> and <span class="math inline">\(b^{\prime}\)</span> - co-vary. If we only had a
 one-dimensional input, <span class="math inline">\(a\)</span>, then the
-Gaussian covariance function would simply be <span class="math display">\[
+Gaussian covariance function would simply be</p>
+<p><span class="math display">\[
 C(a, a^{\prime},\psi_{a})=exp \left( - \left( \frac{a-a^{\prime}}
 {\psi_{a}} \right)^2  \right)
-\]</span> where <span class="math inline">\(\psi_{a}\)</span> is the
+\]</span></p>
+<p>where <span class="math inline">\(\psi_{a}\)</span> is the
 correlation length parameter (a.k.a. the characteristic length-scale of
 the process) for input <span class="math inline">\(a\)</span>, which is
 estimated when fitting the emulator. As the denominator of the fraction,
@@ -723,11 +727,13 @@ the correlation is stronger over larger differences in the values.
 tuple <span class="math inline">\((a_{k}, b_{k})\)</span> so the
 covariance function needs to accommodate both dimensions. Following the
 particular multi-dimensional Gaussian covariance function used by <a href="https://sci-hub.wf/10.1198/tech.2009.08019">Bastos and
-O’Hagan</a>, we get <span class="math display">\[
+O’Hagan</a>, we get</p>
+<p><span class="math display">\[
 C((a, b), (a^{\prime}, b^{\prime}), (\psi_{a}, \psi_{b})) =exp \left( -
 \left( \frac{a-a^{\prime}} {\psi_{a}} \right)^2  + \left(
 \frac{b-b^{\prime}} {\psi_{b}} \right)^2\right)
-\]</span> So, let’s fit the emulator to the predictions and see what we
+\]</span></p>
+<p>So, let’s fit the emulator to the predictions and see what we
 get.</p>
 <pre class="r"><code># Fit model using &#39;train&#39; data.
 model &lt;-

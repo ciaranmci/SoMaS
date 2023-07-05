@@ -105,11 +105,12 @@ One additional piece of information that you might find useful is that the word 
 ## How?
 To illustrate a Gaussian process emulator, I'll use the two-input toy example from [Bastos and O'Hagan](https://sci-hub.wf/10.1198/tech.2009.08019).
 <br/><br/>
-<br/><br/>
 Each of $n$ iterations, $i=(1, 2, \ldots , n)$, of the simulation takes two real-numbered inputs, $a$ and $b$, with range between 0 and 1 inclusive, to produce an output, $y$, according to the function
+
 $$
 y = (1-e^{-\frac{1}{2b}}) \left(\frac{2300a^3+1900a^2+2092a+60}{100a^3+500a^2+4a+20}\right)
 $$
+
 I'll fit a Gaussian process emulator on the inputs and outputs of 20 simulations; these 20 tuples will provide the 'train' dataset. I'll assess my Gaussian process emulator on a separate set of inputs and outputs from another 25 simulations; these 25 tuples will provide the 'test' dataset. The values for inputs will be selected by latin hypercube sampling.
 <br/><br/>
 <br/><br/>
@@ -154,17 +155,21 @@ knitr::kable(head(df_GPE_train))
 All looks good so let's continue.
 <br/><br/>
 I will use a Gaussian covariance / correlation function (a.k.a. a kernel) to define how any two given values of an input - i.e. either $a$ and $a^{\prime}$ or $b$ and $b^{\prime}$ - co-vary. If we only had a one-dimensional input, $a$, then the Gaussian covariance function would simply be
+
 $$
 C(a, a^{\prime},\psi_{a})=exp \left( - \left( \frac{a-a^{\prime}} {\psi_{a}} \right)^2  \right)
 $$
+
 where $\psi_{a}$ is the correlation length parameter (a.k.a. the characteristic length-scale of the process) for input $a$, which is estimated when fitting the emulator. As the denominator of the fraction, it scales / tempers the difference between two given values of $a$, effectively dictating the reach of the correlation influence between values of $a$.
 <br/><br/>
 A larger length parameter leads to a smaller quotient being squared, which leads to a smaller correlation, for a given difference. As you might already have inferred, the choice of the covariance function and its parameters affect how smooth our emulator outputs are. For example, functions are smoother if the correlation is stronger over larger differences in the values.
 <br/><br/>
 Of course, we have a two-dimensional input denoted by the tuple $(a_{k}, b_{k})$ so the covariance function needs to accommodate both dimensions. Following the particular multi-dimensional Gaussian covariance function used by [Bastos and O'Hagan](https://sci-hub.wf/10.1198/tech.2009.08019), we get
+
 $$
 C((a, b), (a^{\prime}, b^{\prime}), (\psi_{a}, \psi_{b})) =exp \left( - \left( \frac{a-a^{\prime}} {\psi_{a}} \right)^2  + \left( \frac{b-b^{\prime}} {\psi_{b}} \right)^2\right)
 $$
+
 So, let's fit the emulator to the predictions and see what we get.
 ```{r Fit the GPE and predict with it, out.width = "80%"}
 # Fit model using 'train' data.
