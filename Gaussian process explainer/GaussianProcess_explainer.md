@@ -33,21 +33,22 @@ plotformatting <-
 
 **Say you come across some random variables. Grab a handful, combine
 them, and calculate their multivariate distribution. If you get a
-multivariate distribution for every random handful you grab, then you
-have a Gaussian process. This multivariate distribution is informed by
-random variables, just like how a univariate distribution is informed by
-random observations. Distributions of random variables are useful
-because, just like we can know something about unobserved observations
-from a known univariate distribution, we can know something about
-unobserved random variables from a known distribution of a Gaussian
-process. Also, we can know something about their variance. <br/><br/>
-The relationship between the component random variables is described by
-the covariance function. A typical covariance matrix describes how two
-random variables relate by summarising how possible observations from
-two random variables vary around their respective means. Very specific,
-and standard. In contrast, a covariance function describes how the
-possible observations of different random variables relate, and you can
-pick and choose the relationship.** <br/><br/> <br/><br/>
+multivariate Gaussian distribution for every random handful you grab,
+then you have a Gaussian process. This multivariate Gaussian
+distribution is informed by random variables, just like how a univariate
+distribution is informed by random observations. Distributions of random
+variables are useful because, just like we can know something about
+unobserved observations from a known univariate distribution, we can
+know something about unobserved random variables from a known
+distribution of a Gaussian process. Also, we can know something about
+their variance. <br/><br/> The relationship between the component random
+variables is described by the covariance function. A typical covariance
+matrix describes how two random variables relate by summarising how
+possible observations from two random variables vary around their
+respective means. Very specific, and standard. In contrast, a covariance
+function describes how the possible observations of different random
+variables relate, and you can pick and choose the relationship.**
+<br/><br/> <br/><br/>
 
 ## Why?
 
@@ -66,10 +67,11 @@ Kriging after Danie G. Krige and his inspiring work.
 
 ``` r
 par(mar = c(4, 4, .1, .1))
-knitr::include_graphics("images/danie_krige.jpeg")
-knitr::include_graphics("images/georges_matheron.jpg")
+knitr::include_graphics("GaussianProcess_explainer_files/figure-gfm/danie_krige.jpeg")
+knitr::include_graphics("GaussianProcess_explainer_files/figure-gfm/georges_matheron.jpg")
 ```
 
+<img src="GaussianProcess_explainer_files/figure-gfm/danie_krige.jpeg" alt="(Left) Danie Krige, namesake of 'Kriging'. (Right) Georges Matheron, who developed Danie Krige's work." width="20%" style="display: block; margin: auto;" /><img src="GaussianProcess_explainer_files/figure-gfm/georges_matheron.jpg" alt="(Left) Danie Krige, namesake of 'Kriging'. (Right) Georges Matheron, who developed Danie Krige's work." width="20%" style="display: block; margin: auto;" />
 Kriging uses Gaussian processes to interpolate values based on some
 prior knowledge of how observations covary. For geostatisticians like
 Krige and Matheron, it’s about interpolating the likely quantity of
@@ -108,9 +110,10 @@ observations and distributions of random variables. To explain, I’d like
 to evoke Bob Ross and to paint (i.e. plot) some mountains.
 
 ``` r
-knitr::include_graphics("images/bobrossmountain.jpg")
+knitr::include_graphics("GaussianProcess_explainer_files/figure-gfm/bobrossmountain.jpg")
 ```
 
+<img src="GaussianProcess_explainer_files/figure-gfm/bobrossmountain.jpg" alt="A delightful Bob Ross with one of his paintings." width="50%" style="display: block; margin: auto;" />
 <br/><br/>
 
 ### Mountain plotter
@@ -195,7 +198,7 @@ these height estimates. Obviously, knowing all the points would be ideal
 but that is too much to ask of my friend and having that information
 would limit my mountain plotter to only plot that one mountain.
 <br/><br/> When I knew the peak height of the mountain and its variance
-in heights, I was able to infer the heights are all points on the
+in heights, I was able to infer the heights at all points on the
 mountain. But how can I infer the heights at all points on the mountain
 when all I have are my friend’s guesses of heights at only a few points
 along the mountain? Thankfully, Gaussian processes / compilations can
@@ -257,7 +260,7 @@ As I said earlier, my first attempt at plotting a mountain used a
 single, univariate distribution. The plot was the result of asking *How
 high can I expect each point on the mountain to be if I assume the
 height of any given point on the mountain is expected to be* $\mu$ *with
-some uncertainty* $\sigma^2$*?*. By taking this approach, I inferred the
+some uncertainty* $\sigma^2$*?* By taking this approach, I inferred the
 unobserved heights at various points on the mountain by knowing only the
 overall expected height (i.e. the mean) and how heights at all point
 relate to it (i.e. variance). <br/><br/> In contrast, my second attempt
@@ -401,9 +404,9 @@ It’s all blurring together - like a blurry view of a mountain through
 the haze. Now you see that I wasn’t plotting multiple values for any
 arbitrary categories; I was plotting multiple height values for
 locations along a mountain range. <br/><br/> Looking at a plot like the
-on e immediately above, you might start to think that the variable on
-the horizontal axis has so many values that it might be wise to model it
-as a continuous variable. Voila! You now have a way to conceptualise
+one immediately above, you might start to think that the variable on the
+horizontal axis has so many values that it might be wise to model it as
+a continuous variable. Voila! You now have a way to conceptualise
 Gaussian processes / compilations: infinitely many distributional plots.
 In fact, I created the previous plot by sampling density values from our
 univariate Gaussian distribution, using each density value (i.e. height)
@@ -411,10 +414,9 @@ as the mean for a Gaussian distribution, then plotting them with barcode
 plots. <br/><br/> (*Side note: I choose to visualise the plot using many
 discrete horizontal values rather than a continuous one because I think
 it better illustrates the approaching-infinite behaviour of what
-Gaussian processes / compilations do*) <br/><br/> If you look at the
+Gaussian processes / compilations do*.) <br/><br/> If you look at the
 plots below from left to right, you can see how I generated the
-Gaussian-process mountain ranges from earlier (specifically, the
-right-most one):
+Gaussian-process mountain ranges from earlier (the right-most one):
 
 ``` r
 ## Sample some height data.
@@ -529,7 +531,7 @@ mountain, we need to incorporate some kind of correlation between
 heights along the mountain. This is done with a covariance matrix. For
 my smooth plot, I specified the correlation between points using the
 following formula, where $d$ is the difference in horizontal location of
-each height (i.e. $h_{x}$ and $h_{x^{\prime}}$, and $\gamma$ is a
+each height (i.e. $h_{x}$ and $h_{x^{\prime}}$), and $\gamma$ is a
 parameter for the range over which I want the correlation to take
 effect: $$
 C(x, x^{\prime})= exp \left( - \left( \frac{d}{\gamma} \right) ^2 \right)
@@ -576,7 +578,7 @@ points will smooth things out. <br/><br/>
 
 ### But what is a covariance function?
 
-One what to think about it is to compare covariance functions with
+One way to think about it is to compare covariance functions with
 covariance matrices. A covariance matrix describes how two random
 variables relate by summarising how possible observations from two
 random variables vary around their respective means. Very specific, and
@@ -639,10 +641,10 @@ show my students to reveal what assumptions we make when we specify some
 linear-predictor models:
 
 ``` r
-knitr::include_graphics("images/why_limit_to_linear_predictors.jpg")
+knitr::include_graphics("GaussianProcess_explainer_files/figure-gfm/why_limit_to_linear_predictors.jpg")
 ```
 
-<img src="images/why_limit_to_linear_predictors.jpg" width="50%" style="display: block; margin: auto;" />
+<img src="GaussianProcess_explainer_files/figure-gfm/why_limit_to_linear_predictors.jpg" width="50%" style="display: block; margin: auto;" />
 <br/><br/> As you can see, summing the random variables is only an
 assumption and is not set in stone. [Nardo et
 al.](https://www.oecd.org/sdd/42495745.pdf) would consider the outputs
