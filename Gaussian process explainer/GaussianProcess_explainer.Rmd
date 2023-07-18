@@ -1,11 +1,11 @@
 ---
-title: "Gaussian Processes (or should I say compilations?)    "
+title: "Gaussian Processes (or should I say compilations?)"
 author: "Ciarán McInerney"
 date: "2023-06-23"
 output:
-  github_document:
-  #html_document:
-  #    code_folding: hide
+  #github_document
+  html_document:
+      code_folding: hide
 ---
 
 ```{r setup, include=FALSE}
@@ -53,6 +53,7 @@ par(mar = c(4, 4, .1, .1))
 knitr::include_graphics("GaussianProcess_explainer_files/figure-gfm/danie_krige.jpeg")
 knitr::include_graphics("GaussianProcess_explainer_files/figure-gfm/georges_matheron.jpg")
 ```
+<br/><br/>
 Kriging uses Gaussian processes to interpolate values based on some prior knowledge of how observations covary. For geostatisticians like Krige and Matheron, it’s about interpolating the likely quantity of mineral deposits distributed throughout a landscape. Generally, kriging can be used to interpolate the value of one random variable by having some (but not necessarily complete) knowledge of how it covaries with another random variable (in addition to assuming that the unobserved random variables are merely unobserved components of the multivariate distribution rather than some other posse of variables).
 <br/><br/>
 
