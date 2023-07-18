@@ -48,9 +48,9 @@ world works. These heuristics and models help us to choose the actions
 we take that lead to the outcomes we perceive. Of course, the future is
 emergent and uncertain so we can’t guarantee particular outcomes.
 Instead, we must settle for uncertainty. Or must we? <br/><br/> Well,
-yes, we do, but could we *improve* our certainty about outcomes - in
-other words, about the outputs for our inputs? The options that are open
-to us are either:
+yes, we do, but could we *improve* our certainty about outcomes? In
+other words, could we improve what we know about the outputs for our
+given inputs? The options that are open to us are either:
 
 1.  maximise the fidelity of our model of how the world works, on the
     assumption that its our messy model that results in messy outputs,
@@ -113,7 +113,7 @@ application (called “refocussing”) can result in a situation like
 paradox](https://en.wikipedia.org/wiki/The_Indefatigable_Frog) and can
 result in the Not Ruled Out Yet space vanishig. To prevent this, some
 absolute, minimum size of the Not Ruled Out Yet space needs to be
-set…but couldn’t we just have set an absolute, maximum accepted
+set…but couldn’t we just have set an absolute, maximum acceptable
 difference in the first place? <br/><br/> As an alternative perspective
 to [Williamson et
 al.’s](https://www.sci-hub.wf/10.1007/s00382-013-1896-4) Not Ruled Out
@@ -233,7 +233,7 @@ shines because we use it to filter the inputs before refitting our
 model. <br/><br/> Below, I fit a Gaussian process emulator to our
 observations before and after using history matching to filter for
 acceptable inputs. (You can find out more about Gaussian process
-emulators in [my other blog](https://github.com/ciaranmci/SoMaS))
+emulators in [my other blog](https://github.com/ciaranmci/SoMaS) )
 
 ``` r
 # Train emulator on all observed data.
@@ -295,8 +295,9 @@ gridExtra::grid.arrange(p_GPE_preHM, p_GPE_postHM, ncol = 2)
 As I note in the subplot headers, this particular emulator is uncertain
 about outputs in the regions where history matching removed unacceptable
 inputs. Nevertheless, the mean emulation (the black line) has been
-pulled closer to the acceptable range of inputs, which is was we want.
-<br/><br/> <br/><br/>
+pulled closer to the acceptable range of inputs, which is what we wished
+for. Unfortunately, we are left with a lo tof uncertainty. We should be
+careful what we wish for. <br/><br/> <br/><br/>
 
 ### Relative measures of uncertainty.
 
@@ -397,12 +398,12 @@ p_refocus_3 <-
 gridExtra::grid.arrange(p_refocus_1, p_refocus_2, p_refocus_3, ncol = 3)
 ```
 
-<img src="HistoryMatching_explainer_files/figure-gfm/refocussing-1.png" width="100%" style="display: block; margin: auto;" />
+<img src="HistoryMatching_explainer_files/figure-gfm/refocussing-1.png" height="80%" style="display: block; margin: auto;" />
 As expected, our green region of Not Ruled Out Yet input-output tuples
 shrinks as we repeatedly trim the unacceptable inputs. You can also see
 that the model we re-fit to the trimmed data (black line) is changing
-and becoming more uncertain (grey regions) in the portions of the input
-space that we trimmed. <br/><br/> <br/><br/>
+and regions of uncertainty (grey regions) are growing in the portions of
+the input space that we trimmed. <br/><br/> <br/><br/>
 
 ### Matching only where we need to match.
 
@@ -415,8 +416,8 @@ history matching. It would be better to intentionally match input-output
 tuples in areas of high output uncertainty in the hope of reducing the
 uncertainty in the model output. (You won’t get rid of it all because
 there is natural variance in underlying phenomenon. If it fits
-perfectly, it’s very likely wrong) <br/><br/> For example, I might fit a
-Gaussian process emulator to the relationship between an input and an
+perfectly, it’s very likely wrong.) <br/><br/> For example, I might fit
+a Gaussian process emulator to the relationship between an input and an
 output, which provides me with a cloud of uncertainty around an average
 function that satisfies the observations:
 
@@ -535,22 +536,22 @@ space, we have to run our model many times to map (cartographically
 rather than mathematically) the relationship between inputs and outputs.
 This can easily mean we do many unnecessary calculations. It is also a
 retrospective method, which means we might spend a substantial amount of
-time / iterations, not optimising our performance. Instead, we’d
-improved in sudden jumps after periods of no improvement. Alternatively,
-we could try to gradually optimise our performance something more akin
-to real-time updating of our inputs, continuous rather than batch
+time / iterations, not optimising our performance. We’d improved in
+sudden jumps after periods of no improvement. Alternatively, we could
+try to gradually optimise our performance something more akin to
+real-time updating of our inputs, continuous rather than batch
 processing. <br/><br/> So, what methods are available for continuously
 updating our inputs? <br/><br/>
 
 #### Bayesian calibration
 
 Bayesian calibration involves the application of Bayes’ rule, which is
-explained in a million places online and those good ol’ fashioned book.
-Very briefly, we start with some initial guess at the distribution of
-input values that result in acceptable outputs, and then update that
-distribution with observations of inputs that we know to result in
-acceptable outputs. <br/><br/> One distinction between typical history
-matching and Bayesian calibration is somewhat analogous to the
+explained in a million places online and those good ol’ fashioned things
+called books. Very briefly, we start with some initial guess at the
+distribution of input values that result in acceptable outputs, and then
+update that distribution with observations of inputs that we know to
+result in acceptable outputs. <br/><br/> One distinction between typical
+history matching and Bayesian calibration is somewhat analogous to the
 distinction between fixed effects and random effects in regression
 analysis. The analogy I’m alluding to is that estimating regression
 coefficients for fixed effects is like saying “*This is the estimate;
@@ -588,7 +589,7 @@ al.](https://www.sci-hub.wf/10.1007/s00382-013-1896-4) provides a small
 discussion on differences between history matching and Bayesian
 calibration, if you are interested. <br/><br/> <br/><br/>
 
-#### Ensemble Kalman filters.
+#### Ensemble Kalman filters
 
 But perhaps you are more of a frequentist than a Bayesian. Fear not;
 there is a gradual-update approach for you, too. Well, actually, it
@@ -597,12 +598,13 @@ prior, which is the difficult part. Instead, you just assume it is
 Gaussian and that it is defined by the average and variance of some
 previous, small searches. <br/><br/> Ensemble Kalman filtering involves
 iterating two-steps to update our behaviour in response to our
-observations. They are suited to systems where the outcome influences
-the subsequent input cyclically, rather than the input merely nudging an
-on-going output-generating process. For example, have a read of [Ward,
-Evans, and Malleson 2016](https://sci-hub.wf/10.1098/rsos.150703) to see
-how ensemble Kalman filters are used to dynamically calibrate
-agent-based models. <br/><br/> There are two steps:
+observations. THis kind of filtering is suited to systems where the
+outcome influences the subsequent input cyclically, rather than the
+input merely nudging an on-going output-generating process. For example,
+have a read of [Ward, Evans, and Malleson
+2016](https://sci-hub.wf/10.1098/rsos.150703) to see how ensemble Kalman
+filters are used to dynamically calibrate agent-based models. <br/><br/>
+There are two steps:
 
 1.  forecasting
 
@@ -617,7 +619,7 @@ a little, to the right a little, etc.? This gives a set of possible near
 next moves - a.k.a. an ensemble. Proponents of ensemble Kalman filters
 suggest that the mean of this ensemble is the best guess of the desired
 output, and the variance is a measure of uncertainty. <br/><br/> The
-second step is to actually observe the immediately-future. This is like
+second step is to actually observe the immediate future. This is like
 your phone buzzing again as a second message arrives, but you are paying
 attention this time so you now know for sure that it is somewhere to the
 right of you. Congratulations, you have updated your understanding and
@@ -626,7 +628,7 @@ other words, you have constrained the choice of directions in which you
 will travel to find your phone. <br/><br/> The fossil fuel industry seem
 to be rather keen on this approach - see [Rwechungura et
 al. 2011](https://sci-hub.wf/10.2118/142497-MS). I’m unsettled about the
-Gaussian assumption but, as Anna said in Frozen 2,:
+Gaussian assumption but, as Anna said in Frozen 2…
 
 ``` r
 knitr::include_graphics("https://media.giphy.com/media/Ymt6N7O93ixVVbmBNl/giphy.gif")
@@ -635,9 +637,9 @@ knitr::include_graphics("https://media.giphy.com/media/Ymt6N7O93ixVVbmBNl/giphy.
 <img src="https://media.giphy.com/media/Ymt6N7O93ixVVbmBNl/giphy.gif" width="50%" style="display: block; margin: auto;" />
 
 I have to agree with her: in times when you can’t know the future with
-sufficient certainty, choose the least-worst option and reassess.
-<br/><br/> (*Side note: This is exactly the approach advocated for
-navigating complex adaptive systems, particular social ones. [Dave
+sufficient certainty, choose the least-worst option, take a step, then
+reassess. <br/><br/> (*Side note: This is exactly the approach advocated
+for navigating complex adaptive systems, particular social ones. [Dave
 Snowden](https://thecynefin.co/team/dave-snowden/), coiner of the term
 “antropic complexity”, [is particularly a
 fan](https://www.coachesrising.com/podcast/the-problem-with-developmental-models-with-dave-snowden/).*)
@@ -664,7 +666,7 @@ understanding of the truth. But what if our previous observations of
 outputs poorly represent the truth? Selection bias is a beast!
 <br/><br/> I think selection bias is easiest to understand as collider
 bias using directed acyclic graphs, which is beyond the scope of this
-blog. In place of a deepr dive, check out figure 1 in [Griffith et
+blog. In place of a deeper dive, check out figure 1 in [Griffith et
 al.](https://www.sci-hub.wf/10.1038/s41467-020-19478-2) for a simple
 illustration of how selection bias changes our perception of a
 relationship (image URL is in code box). Focus on part C of the figure
@@ -707,7 +709,7 @@ not? Perhaps I am missing something. Please, let me know. <br/><br/>
 that we are doing it. But if you don’t realise that you have selected a
 subset of situations and you make statements about the whole, then your
 inferences are incorrect. What I’m trying to say is that bias is not
-inherently a bad thing, but not acknowledging it misleads)* <br/><br/>
+inherently a bad thing, but not acknowledging it misleads.)* <br/><br/>
 
 ### The dangers of extrapolation
 
@@ -716,11 +718,11 @@ the matched points, i.e. interpolation and extrapolation. Another
 problem I have with history matching is that it infers what inputs are
 reasonable by assessing only a handful of observations. Making
 inferences is just part of life but it must be handled with care. For
-example, does history matching assume a linearity of output values’
-effects to input values? By disregarding all input values beyond our Not
-Ruled Out Yet space, we don’t permit non-linear effects, reversal of
-effects, or pockets of sensible outputs after a gap of nonsensical ones.
-Let me try to give some illustrative examples:
+example, does history matching assume a linearity between input and
+output values? By disregarding all input values beyond our Not Ruled Out
+Yet space, we don’t permit non-linear effects, reversal of effects, or
+pockets of sensible outputs after a gap of nonsensical ones. Let me try
+to give some illustrative examples:
 
 -   An over-the-top example is to match a straight-line linear
     regression model to pre-1960 global surface temperature. This is
@@ -817,7 +819,7 @@ little. <br/><br/> <br/><br/>
 
 1.  The function I used in the example of history matching with absolute
     values was taken from the tutorial for the [`hmer`
-    package](https://danny-sc.github.io/Tutorial_1/one-dimensional-example.html)),
+    package](https://danny-sc.github.io/Tutorial_1/one-dimensional-example.html),
     which is a history-matching package in R. If you want a Python
     package for history matching, check out
     [`mogp_emulator`](https://mogp-emulator.readthedocs.io/en/latest/demos/historymatch_demos.html).
