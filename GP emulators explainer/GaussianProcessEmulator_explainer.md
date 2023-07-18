@@ -27,13 +27,13 @@ want your emulator to be simpler, faster, and/or cheaper than the model
 it is emulating. Gaussian processes are a common choice but even [random
 forests have been used as simplified representations of ocean trophic
 models](https://www.stat.colostate.edu/~hooten/papers/pdf/Hooten_etal_JABES_2011.pdf).**
-<br/><br/> **Benefit of Gaussian process emulators are that**
+<br/><br/> **Benefits of Gaussian process emulators include**
 
 1.  **in addition to providing outputs from a simpler model, they
     provide likely functions that satisfy the input-output relationship,
     and**
 
-2.  **it inherently quantifies the uncertainty of emulations.**
+2.  **they inherently quantify the uncertainty of emulations.**
 
 <br/><br/> <br/><br/>
 
@@ -233,7 +233,7 @@ knitr::kable(head(df_GPE_train))
 
 All looks good so let’s continue. <br/><br/> I will use a Gaussian
 covariance / correlation function (a.k.a. a kernel) to define how any
-two given values of an input - i.e. either $a$ and $a^{\prime}$ or $b$
+two given values of an input - i.e. either $a$ and $a^{\prime}$, or $b$
 and $b^{\prime}$ - co-vary. If we only had a one-dimensional input, $a$,
 then the Gaussian covariance function would simply be
 
@@ -258,7 +258,7 @@ the particular multi-dimensional Gaussian covariance function used by
 [Bastos and O’Hagan](https://sci-hub.wf/10.1198/tech.2009.08019), we get
 
 $$
-C((a, b), (a^{\prime}, b^{\prime}), (\psi_{a}, \psi_{b})) =exp \left( - \left( \frac{a-a^{\prime}} {\psi_{a}} \right)^2  + \left( \frac{b-b^{\prime}} {\psi_{b}} \right)^2\right)
+C((a, b), (a^{\prime}, b^{\prime}), (\psi_{a}, \psi_{b})) =exp \left( - \left( \frac{a-a^{\prime}} {\psi_{a}} \right)^2  - \left( \frac{b-b^{\prime}} {\psi_{b}} \right)^2\right)
 $$
 
 So, let’s fit the emulator to the predictions and see what we get.
@@ -456,7 +456,7 @@ well-fitted-but-merely-a-proxy simulation. To ponder more about this
 issue of proxy models, I highly recommend the fourth chapter of Richard
 McElreath’s book “[Statistical
 Rethinking](https://xcelab.net/rm/statistical-rethinking/)” or watching
-[its accompanying lecture recording](https://youtu.be/tNOu-SEacNU)
+[its accompanying lecture recording](https://youtu.be/tNOu-SEacNU).
 <br/><br/>
 
 ### Is it normal?
@@ -480,7 +480,7 @@ interpretting as usual (i.e. points on the lines means good). <br/><br/>
 
 ### Resources
 
-1.  For a a good introduction to Gaussian process emulation, check our
+1.  For a good introduction to Gaussian process emulation, check our
     University of Bristol’s offer
     (<https://compass.blogs.bristol.ac.uk/2022/01/25/gaussian-process-emulation/>).
 

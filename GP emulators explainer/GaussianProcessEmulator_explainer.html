@@ -480,13 +480,13 @@ keeping in mind that you want your emulator to be simpler, faster,
 and/or cheaper than the model it is emulating. Gaussian processes are a
 common choice but even <a href="https://www.stat.colostate.edu/~hooten/papers/pdf/Hooten_etal_JABES_2011.pdf">random
 forests have been used as simplified representations of ocean trophic
-models</a>.</strong> <br /><br /> <strong>Benefit of Gaussian process
-emulators are that</strong></p>
+models</a>.</strong> <br /><br /> <strong>Benefits of Gaussian process
+emulators include</strong></p>
 <ol style="list-style-type: decimal">
 <li><p><strong>in addition to providing outputs from a simpler model,
 they provide likely functions that satisfy the input-output
 relationship, and</strong></p></li>
-<li><p><strong>it inherently quantifies the uncertainty of
+<li><p><strong>they inherently quantify the uncertainty of
 emulations.</strong></p></li>
 </ol>
 <p><br /><br /> <br /><br /></p>
@@ -705,7 +705,7 @@ knitr::kable(head(df_GPE_train))</code></pre>
 </table>
 <p>All looks good so let’s continue. <br /><br /> I will use a Gaussian
 covariance / correlation function (a.k.a. a kernel) to define how any
-two given values of an input - i.e. either <span class="math inline">\(a\)</span> and <span class="math inline">\(a^{\prime}\)</span> or <span class="math inline">\(b\)</span> and <span class="math inline">\(b^{\prime}\)</span> - co-vary. If we only had a
+two given values of an input - i.e. either <span class="math inline">\(a\)</span> and <span class="math inline">\(a^{\prime}\)</span>, or <span class="math inline">\(b\)</span> and <span class="math inline">\(b^{\prime}\)</span> - co-vary. If we only had a
 one-dimensional input, <span class="math inline">\(a\)</span>, then the
 Gaussian covariance function would simply be</p>
 <p><span class="math display">\[
@@ -730,7 +730,7 @@ particular multi-dimensional Gaussian covariance function used by <a href="https
 O’Hagan</a>, we get</p>
 <p><span class="math display">\[
 C((a, b), (a^{\prime}, b^{\prime}), (\psi_{a}, \psi_{b})) =exp \left( -
-\left( \frac{a-a^{\prime}} {\psi_{a}} \right)^2  + \left(
+\left( \frac{a-a^{\prime}} {\psi_{a}} \right)^2  - \left(
 \frac{b-b^{\prime}} {\psi_{b}} \right)^2\right)
 \]</span></p>
 <p>So, let’s fit the emulator to the predictions and see what we
@@ -905,7 +905,7 @@ than, say, some well-fitted-but-merely-a-proxy simulation. To ponder
 more about this issue of proxy models, I highly recommend the fourth
 chapter of Richard McElreath’s book “<a href="https://xcelab.net/rm/statistical-rethinking/">Statistical
 Rethinking</a>” or watching <a href="https://youtu.be/tNOu-SEacNU">its
-accompanying lecture recording</a> <br /><br /></p>
+accompanying lecture recording</a>. <br /><br /></p>
 </div>
 <div id="is-it-normal" class="section level3">
 <h3>Is it normal?</h3>
@@ -929,8 +929,8 @@ on the lines means good). <br /><br /> <br /><br /></p>
 <div id="resources" class="section level3">
 <h3>Resources</h3>
 <ol style="list-style-type: decimal">
-<li><p>For a a good introduction to Gaussian process emulation, check
-our University of Bristol’s offer (<a href="https://compass.blogs.bristol.ac.uk/2022/01/25/gaussian-process-emulation/" class="uri">https://compass.blogs.bristol.ac.uk/2022/01/25/gaussian-process-emulation/</a>).</p></li>
+<li><p>For a good introduction to Gaussian process emulation, check our
+University of Bristol’s offer (<a href="https://compass.blogs.bristol.ac.uk/2022/01/25/gaussian-process-emulation/" class="uri">https://compass.blogs.bristol.ac.uk/2022/01/25/gaussian-process-emulation/</a>).</p></li>
 <li><p><a href="https://distill.pub">distill.pub</a> publications also
 have a blog by <a href="https://distill.pub/2020/bayesian-optimization/">Agnihotri and
 Batra</a> on Bayesian optimization that references Krige’s initial
