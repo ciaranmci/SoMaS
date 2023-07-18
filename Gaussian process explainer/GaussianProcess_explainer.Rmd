@@ -3,9 +3,9 @@ title: "Gaussian Processes (or should I say compilations?)    "
 author: "Ciarán McInerney"
 date: "2023-06-23"
 output:
-  #github_document:
-  html_document:
-      code_folding: hide
+  github_document:
+  #html_document:
+  #    code_folding: hide
 ---
 
 ```{r setup, include=FALSE}
@@ -38,7 +38,7 @@ plotformatting <-
 ```
 
 ## TL;DR
-**Say you come across some random variables. Grab a handful, combine them, and calculate their multivariate distribution. If you get a multivariate distribution for every random handful you grab, then you have a Gaussian process. This multivariate distribution is informed by random variables, just like how a univariate distribution is informed by random observations. Distributions of random variables are useful because, just like we can know something about unobserved observations from a known univariate distribution, we can know something about unobserved random variables from a known distribution of a Gaussian process. Also, we can know something about their variance.
+**Say you come across some random variables. Grab a handful, combine them, and calculate their multivariate distribution. If you get a multivariate Gaussian distribution for every random handful you grab, then you have a Gaussian process. This multivariate Gaussian distribution is informed by random variables, just like how a univariate distribution is informed by random observations. Distributions of random variables are useful because, just like we can know something about unobserved observations from a known univariate distribution, we can know something about unobserved random variables from a known distribution of a Gaussian process. Also, we can know something about their variance.
 <br/><br/>
 The relationship between the component random variables is described by the covariance function. A typical covariance matrix describes how two random variables relate by summarising how possible observations from two random variables vary around their respective means. Very specific, and standard. In contrast, a covariance function describes how the possible observations of different random variables relate, and you can pick and choose the relationship.**
 <br/><br/>
@@ -48,10 +48,10 @@ The relationship between the component random variables is described by the cova
 So, what is the motivation behind Gaussian processes?
 <br/><br/>
 Once upon a time, a South African by the name of Danie G. Krige was trying to estimate the distribution of gold deposits across an entire region when all he had to work with were observations of gold from a disparate sample of boreholes. His work – summarised in [his 1951 publication](https://journals.co.za/doi/epdf/10.10520/AJA0038223X_4792) entitled “A statistical approach to some basic mine valuation problems on the Witwatersrand” – was read by the French mathematician Georges Matheron who developed the ideas and created the field of geostatistics. Matheron developed a method that provides the best-linear-unbiased-prediction of interpolated values, which he called Kriging after Danie G. Krige and his inspiring work.
-```{r figures-side, fig.show="hold", out.width="20%", fig.cap="(Left) Danie Krige, namesake of 'Kriging'. (Right) Georges Matheron, who developed Danie Krige's work."}
+```{r figures-side, fig.show="hold", out.width="20%", results = 'unhide', fig.cap="(Left) Danie Krige, namesake of 'Kriging'. (Right) Georges Matheron, who developed Danie Krige's work."}
 par(mar = c(4, 4, .1, .1))
-knitr::include_graphics("images/danie_krige.jpeg")
-knitr::include_graphics("images/georges_matheron.jpg")
+knitr::include_graphics("GaussianProcess_explainer_files/figure-gfm/danie_krige.jpeg")
+knitr::include_graphics("GaussianProcess_explainer_files/figure-gfm/georges_matheron.jpg")
 ```
 Kriging uses Gaussian processes to interpolate values based on some prior knowledge of how observations covary. For geostatisticians like Krige and Matheron, it’s about interpolating the likely quantity of mineral deposits distributed throughout a landscape. Generally, kriging can be used to interpolate the value of one random variable by having some (but not necessarily complete) knowledge of how it covaries with another random variable (in addition to assuming that the unobserved random variables are merely unobserved components of the multivariate distribution rather than some other posse of variables).
 <br/><br/>
@@ -66,8 +66,8 @@ Obviously, in the previous sections, I left out some important details, but it w
 <br/><br/>
 First of all, when I said “_Grab a handful_ [of random variables] _, combine them_”, I actually needed you to linearly combine them, i.e. sum them after multiplying each by some constant. Gaussian processes don’t work otherwise, which is one of their limitations.
 Secondly, I didn’t make clear an essential distinction between distributions of random observations and distributions of random variables. To explain, I'd like to evoke Bob Ross and to paint (i.e. plot) some mountains.
-```{r, out.width="50%", fig.cap="A delightful Bob Ross with one of his paintings."}
-knitr::include_graphics("images/bobrossmountain.jpg")
+```{r, out.width="50%", results = 'unhide', fig.cap="A delightful Bob Ross with one of his paintings."}
+knitr::include_graphics("GaussianProcess_explainer_files/figure-gfm/bobrossmountain.jpg")
 ```
 <br/><br/>
 
@@ -124,7 +124,7 @@ for (iter in 1:3)
 <br/><br/>
 For my second attempt, I ask to know the height at a handful of points along the mountain and to know how certain my friend is of these height estimates. Obviously, knowing all the points would be ideal but that is too much to ask of my friend and having that information would limit my mountain plotter to only plot that one mountain.
 <br/><br/>
-When I knew the peak height of the mountain and its variance in heights, I was able to infer the heights are all points on the mountain. But how can I infer the heights at all points on the mountain when all I have are my friend's guesses of heights at only a few points along the mountain? Thankfully, Gaussian processes / compilations can help us do just that, and produce mountain ranges like what I show below. (_Specifically, I make use of a Gaussian process emulator, which you can learn more about in [my other explainer](https://github.com/ciaranmci/SoMaS)_)
+When I knew the peak height of the mountain and its variance in heights, I was able to infer the heights at all points on the mountain. But how can I infer the heights at all points on the mountain when all I have are my friend's guesses of heights at only a few points along the mountain? Thankfully, Gaussian processes / compilations can help us do just that, and produce mountain ranges like what I show below. (_Specifically, I make use of a Gaussian process emulator, which you can learn more about in [my other explainer](https://github.com/ciaranmci/SoMaS)_)
 ```{r Three GP mountain ranges, fig.height = 2}
 # Extract the plotting data from the plot.
 data_p_univar <-
@@ -172,7 +172,7 @@ So, how did I go from a single, isolated peak to an interacting mountain range?
 <br/><br/>
 
 ## How?
-As I said earlier, my first attempt at plotting a mountain used a single, univariate distribution. The plot was the result of asking _How high can I expect each point on the mountain to be if I assume the height of any given point on the mountain is expected to be_ $\mu$ _with some uncertainty_ $\sigma^2$_?_. By taking this approach, I inferred the unobserved heights at various points on the mountain by knowing only the overall expected height (i.e. the mean) and how heights at all point relate to it (i.e. variance).
+As I said earlier, my first attempt at plotting a mountain used a single, univariate distribution. The plot was the result of asking _How high can I expect each point on the mountain to be if I assume the height of any given point on the mountain is expected to be_ $\mu$ _with some uncertainty_ $\sigma^2$_?_ By taking this approach, I inferred the unobserved heights at various points on the mountain by knowing only the overall expected height (i.e. the mean) and how heights at all point relate to it (i.e. variance).
 <br/><br/>
 In contrast, my second attempt at plotting a mountain used multiple univariate distributions that were neatly described by a single, multivariate distribution - i.e. a Gaussian process / compilation. The plot was the result of asking a different question: _How high can I expect each point on the mountain to be if I assume the height of each point has its own expected value_ $\mu_{point}$ _with its own uncertainty_ $\sigma_{point}^2$ _, and I only observe a handful of these?_
 <br/><br/>
@@ -285,11 +285,11 @@ for (iter in 1:cats)
 
 It's all blurring together - like a blurry view of a mountain through the haze. Now you see that I wasn't plotting multiple values for any arbitrary categories; I was plotting multiple height values for locations along a mountain range.
 <br/><br/>
-Looking at a plot like the on   e immediately above, you might start to think that the variable on the horizontal axis has so many values that it might be wise to model it as a continuous variable. Voila! You now have a way to conceptualise Gaussian processes / compilations: infinitely many distributional plots. In fact, I created the previous plot by sampling density values from our univariate Gaussian distribution, using each density value (i.e. height) as the mean for a Gaussian distribution, then plotting them with barcode plots.
+Looking at a plot like the one immediately above, you might start to think that the variable on the horizontal axis has so many values that it might be wise to model it as a continuous variable. Voila! You now have a way to conceptualise Gaussian processes / compilations: infinitely many distributional plots. In fact, I created the previous plot by sampling density values from our univariate Gaussian distribution, using each density value (i.e. height) as the mean for a Gaussian distribution, then plotting them with barcode plots.
 <br/><br/>
-(_Side note: I choose to visualise the plot using many discrete horizontal values rather than a continuous one because I think it better illustrates the approaching-infinite behaviour of what Gaussian processes / compilations do_)
+(_Side note: I choose to visualise the plot using many discrete horizontal values rather than a continuous one because I think it better illustrates the approaching-infinite behaviour of what Gaussian processes / compilations do_.)
 <br/><br/>
-If you look at the plots below from left to right, you can see how I generated the Gaussian-process mountain ranges from earlier (specifically, the right-most one):
+If you look at the plots below from left to right, you can see how I generated the Gaussian-process mountain ranges from earlier (the right-most one):
 ```{r Making of GP mountain range, fig.height = 3}
 ## Sample some height data.
 df_sample<-
@@ -370,7 +370,7 @@ df_jaggedy <-
             show.legend = F) +
   plotformatting)
 ```
-This looks impossibly jaggedy for a real mountain range. That is because I choose the heights at each horizontal location without considering the heights of the mountain around it. Although cliffs and crevasses can exist, we wouldn't expect them this frequently. To plot a more-realistic mountain, we need to incorporate some kind of correlation between heights along the mountain. This is done with a covariance matrix. For my smooth plot, I specified the correlation between points using the following formula, where $d$ is the difference in horizontal location of each height (i.e. $h_{x}$ and $h_{x^{\prime}}$, and $\gamma$ is a parameter for the range over which I want the correlation to take effect:
+This looks impossibly jaggedy for a real mountain range. That is because I choose the heights at each horizontal location without considering the heights of the mountain around it. Although cliffs and crevasses can exist, we wouldn't expect them this frequently. To plot a more-realistic mountain, we need to incorporate some kind of correlation between heights along the mountain. This is done with a covariance matrix. For my smooth plot, I specified the correlation between points using the following formula, where $d$ is the difference in horizontal location of each height (i.e. $h_{x}$ and $h_{x^{\prime}}$), and $\gamma$ is a parameter for the range over which I want the correlation to take effect:
 $$
 C(x, x^{\prime})= exp \left( - \left( \frac{d}{\gamma} \right) ^2 \right)
 $$
@@ -409,7 +409,7 @@ The jaggedy version made using a covariance matrix is notably less-jagged than t
 <br/><br/>
 
 ### But what is a covariance function?
-One what to think about it is to compare covariance functions with covariance matrices. A covariance matrix describes how two random variables relate by summarising how possible observations from two random variables vary around their respective means. Very specific, and standard. In contrast, a covariance function describes how the possible observations of different random _variables_ relate, and you can pick-and-choose the relationship.
+One way to think about it is to compare covariance functions with covariance matrices. A covariance matrix describes how two random variables relate by summarising how possible observations from two random variables vary around their respective means. Very specific, and standard. In contrast, a covariance function describes how the possible observations of different random _variables_ relate, and you can pick-and-choose the relationship.
 <br/><br/>
 Covariance functions are also called kernels because they perform the kernel trick, just like for support vector machines. A quick explanation of kernels goes something like this:
 
@@ -427,7 +427,7 @@ Gaussian processes - or as I like to call them, "compilations" - are an example 
 <br/><br/>
 But Gaussian processes / compilations aren't perfect. Gaussian processes require that the multivariate Gaussian distribution arises for any linear predictor of component random variables that are Gaussian distributed. Linear predictors are handy mathematical objects but there is nothing inherently more correct or representative about them than other ways of combining random variables. Below is snippet of a slide I show my students to reveal what assumptions we make when we specify some linear-predictor models:
 ```{r why limit yourself, out.width="50%", results= "unhide"}
-knitr::include_graphics("images/why_limit_to_linear_predictors.jpg")
+knitr::include_graphics("GaussianProcess_explainer_files/figure-gfm/why_limit_to_linear_predictors.jpg")
 ```
 <br/><br/>
 As you can see, summing the random variables is only an assumption and is not set in stone. [Nardo et al.](https://www.oecd.org/sdd/42495745.pdf) would consider the outputs of linear predictors to be “_composite indicators_” and, therefore, potentially victim to issues of compensability. Perhaps multiplying the random variables would be more appropriate, particularly when the output is used for ranking. But multiplying Gaussian distributions provides a lognormal distribution rather than a multivariate Gaussian, so the theory of Gaussian processes / compilations don't apply.
