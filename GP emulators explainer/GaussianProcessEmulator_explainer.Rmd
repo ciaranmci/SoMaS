@@ -3,7 +3,7 @@ title: "Gaussian process emulation"
 author: "Ciarán McInerney"
 date: "2023-06-26"
 output:
-  #github_document:
+  #github_document
   html_document:
       code_folding: hide
 ---
@@ -25,11 +25,11 @@ set.seed(1)
 ## TL;DR
 **Emulators are models of models, where models are just simplified representations of something. People often make emulators of simulators when their simulators are too costly to run as often as they'd like. A good emulator is one that can produce outputs sufficiently similarly to what the underlying simulation would produce, for the same inputs. You can use any modelling approach as an emulator, keeping in mind that you want your emulator to be simpler, faster, and/or cheaper than the model it is emulating. Gaussian processes are a common choice but even [random forests have been used as simplified representations of ocean trophic models](https://www.stat.colostate.edu/~hooten/papers/pdf/Hooten_etal_JABES_2011.pdf).**
 <br/><br/>
-**Benefit of Gaussian process emulators are that**
+**Benefits of Gaussian process emulators include**
 
 1. **in addition to providing outputs from a simpler model, they provide likely functions that satisfy the input-output relationship, and**
 
-2. **it inherently quantifies the uncertainty of emulations.**
+2. **they inherently quantify the uncertainty of emulations.**
 
 <br/><br/>
 <br/><br/>
@@ -154,7 +154,7 @@ knitr::kable(head(df_GPE_train))
 ```
 All looks good so let's continue.
 <br/><br/>
-I will use a Gaussian covariance / correlation function (a.k.a. a kernel) to define how any two given values of an input - i.e. either $a$ and $a^{\prime}$ or $b$ and $b^{\prime}$ - co-vary. If we only had a one-dimensional input, $a$, then the Gaussian covariance function would simply be
+I will use a Gaussian covariance / correlation function (a.k.a. a kernel) to define how any two given values of an input - i.e. either $a$ and $a^{\prime}$, or $b$ and $b^{\prime}$ - co-vary. If we only had a one-dimensional input, $a$, then the Gaussian covariance function would simply be
 
 $$
 C(a, a^{\prime},\psi_{a})=exp \left( - \left( \frac{a-a^{\prime}} {\psi_{a}} \right)^2  \right)
@@ -167,7 +167,7 @@ A larger length parameter leads to a smaller quotient being squared, which leads
 Of course, we have a two-dimensional input denoted by the tuple $(a_{k}, b_{k})$ so the covariance function needs to accommodate both dimensions. Following the particular multi-dimensional Gaussian covariance function used by [Bastos and O'Hagan](https://sci-hub.wf/10.1198/tech.2009.08019), we get
 
 $$
-C((a, b), (a^{\prime}, b^{\prime}), (\psi_{a}, \psi_{b})) =exp \left( - \left( \frac{a-a^{\prime}} {\psi_{a}} \right)^2  + \left( \frac{b-b^{\prime}} {\psi_{b}} \right)^2\right)
+C((a, b), (a^{\prime}, b^{\prime}), (\psi_{a}, \psi_{b})) =exp \left( - \left( \frac{a-a^{\prime}} {\psi_{a}} \right)^2  - \left( \frac{b-b^{\prime}} {\psi_{b}} \right)^2\right)
 $$
 
 So, let's fit the emulator to the predictions and see what we get.
@@ -272,7 +272,7 @@ Gaussian process emulators are very versatile, can tell us the probability of fi
 ### It ain't magic
 [As I noted in my explainer of Gaussian processes](https://github.com/ciaranmci/SoMaS), they are not some sort of magic that frees the user of difficult decisions just because it replaces a resource-consuming simulation. These "difficult decisions" I'm talking about are the assumptions that a method relies on. One assumption of a Gaussian process emulator is that each point in the simulation being emulated is Gaussian distributed and [stationary](https://en.wikipedia.org/wiki/Stationary_process) over the duration being simulated. This is only justified if the underlying data-generating phenomenon is in a consistent / stable state rather than switching between different states, or worse still, ever-changing. The variance we observe must be due to randomness, only.
 <br/><br/>
-In the case of climate modelling, it is arguable that the Gaussian process emulation's assumption of stationarity will only be valid for emulating simulations based on stable physical laws, rather than, say, some well-fitted-but-merely-a-proxy simulation. To ponder more about this issue of proxy models, I highly recommend the fourth chapter of Richard McElreath's book "[Statistical Rethinking](https://xcelab.net/rm/statistical-rethinking/)" or watching [its accompanying lecture recording](https://youtu.be/tNOu-SEacNU)
+In the case of climate modelling, it is arguable that the Gaussian process emulation's assumption of stationarity will only be valid for emulating simulations based on stable physical laws, rather than, say, some well-fitted-but-merely-a-proxy simulation. To ponder more about this issue of proxy models, I highly recommend the fourth chapter of Richard McElreath's book "[Statistical Rethinking](https://xcelab.net/rm/statistical-rethinking/)" or watching [its accompanying lecture recording](https://youtu.be/tNOu-SEacNU).
 <br/><br/>
 
 ### Is it normal?
@@ -287,7 +287,7 @@ The Gaussian assumptions can be checked using, for example, Q-Q plots of the unc
 
 ### Resources
 
-1.	For a a good introduction to Gaussian process emulation, check our University of Bristol's offer (https://compass.blogs.bristol.ac.uk/2022/01/25/gaussian-process-emulation/).
+1.	For a good introduction to Gaussian process emulation, check our University of Bristol's offer (https://compass.blogs.bristol.ac.uk/2022/01/25/gaussian-process-emulation/).
 
 2.	[distill.pub](https://distill.pub) publications also have a blog by [Agnihotri and Batra](https://distill.pub/2020/bayesian-optimization/) on Bayesian optimization that references Krige’s initial work.
 
