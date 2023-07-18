@@ -72,9 +72,9 @@ knitr::include_graphics("GaussianProcess_explainer_files/figure-gfm/georges_math
 ```
 
 <img src="GaussianProcess_explainer_files/figure-gfm/danie_krige.jpeg" alt="(Left) Danie Krige, namesake of 'Kriging'. (Right) Georges Matheron, who developed Danie Krige's work." width="20%" style="display: block; margin: auto;" /><img src="GaussianProcess_explainer_files/figure-gfm/georges_matheron.jpg" alt="(Left) Danie Krige, namesake of 'Kriging'. (Right) Georges Matheron, who developed Danie Krige's work." width="20%" style="display: block; margin: auto;" />
-Kriging uses Gaussian processes to interpolate values based on some
-prior knowledge of how observations covary. For geostatisticians like
-Krige and Matheron, it’s about interpolating the likely quantity of
+<br/><br/> Kriging uses Gaussian processes to interpolate values based
+on some prior knowledge of how observations covary. For geostatisticians
+like Krige and Matheron, it’s about interpolating the likely quantity of
 mineral deposits distributed throughout a landscape. Generally, kriging
 can be used to interpolate the value of one random variable by having
 some (but not necessarily complete) knowledge of how it covaries with
